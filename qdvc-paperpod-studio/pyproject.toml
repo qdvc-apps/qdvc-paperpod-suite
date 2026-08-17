@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qdvc-paperpod-studio"
+version = "0.1.0"
+description = "Desktop companion that prepares payloads for the QDVC Paperpod tablet app"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+dependencies = [
+    # ICS parsing and recurrence expansion. Doing this on the desktop is the
+    # whole point of the design, so these are not optional.
+    "icalendar>=6.0",
+    "python-dateutil>=2.9",
+    # Rasterises equations and tables so the device needs no maths renderer.
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+# PyGObject is usually better installed from the distribution's packages
+# (python3-gi, gir1.2-gtk-4.0) than from PyPI, so the GUI extra is opt-in.
+gui = ["PyGObject>=3.46"]
+
+[project.scripts]
+paperpod-studio = "qdvc_paperpod_studio.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["qdvc_paperpod_studio*"]

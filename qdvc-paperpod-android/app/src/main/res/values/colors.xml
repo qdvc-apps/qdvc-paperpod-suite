@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Kaleido 3 loses contrast to the colour filter array, so text is pure
+         black on pure white and nothing important is rendered in grey. -->
+    <color name="ink">#FF000000</color>
+    <color name="paper">#FFFFFFFF</color>
+    <!-- Reserved for structure only: rules, hairlines, disabled outlines. -->
+    <color name="rule">#FF000000</color>
+    <!-- Semantic colour, used on fills and rules, never on small text. -->
+    <color name="urgent">#FFB00018</color>
+    <color name="accent">#FF00507A</color>
+</resources>

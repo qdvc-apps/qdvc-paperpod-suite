@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Paperpod" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/paper</item>
+        <item name="android:textColorPrimary">@color/ink</item>
+        <item name="android:textColorSecondary">@color/ink</item>
+        <item name="android:colorBackground">@color/paper</item>
+        <item name="android:statusBarColor">@color/paper</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/paper</item>
+        <!-- No fades, no ripples, no overscroll glow: every animated pixel is a
+             wasted panel refresh on e-paper. -->
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowContentTransitions">false</item>
+        <item name="android:fadeScrollbars">false</item>
+    </style>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The rail lives in a container whose child order is swapped at runtime so the
+     rail can sit on either edge; on a 7" slate held in one hand the reachable
+     side is a matter of which hand. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/paper">
+
+    <com.qdvc.paperpod.ui.RailView
+        android:id="@+id/rail"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+</LinearLayout>
