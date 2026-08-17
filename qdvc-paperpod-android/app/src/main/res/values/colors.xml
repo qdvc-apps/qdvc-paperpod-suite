@@ -9,4 +9,7 @@
     <!-- Semantic colour, used on fills and rules, never on small text. -->
     <color name="urgent">#FFB00018</color>
     <color name="accent">#FF00507A</color>
+    <!-- Launcher icon only. Dark and saturated so it still reads as green once
+         Kaleido's colour filter array has taken its cut. -->
+    <color name="leaf">#FF1B7F3B</color>
 </resources>

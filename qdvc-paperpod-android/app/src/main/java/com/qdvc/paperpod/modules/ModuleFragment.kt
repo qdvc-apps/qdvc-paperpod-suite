@@ -78,6 +78,12 @@ abstract class ModuleFragment : Fragment() {
     protected fun header(title: String, meta: String? = null, action: View? = null): View {
         val ctx = requireContext()
         val wrap = Eink.column(ctx)
+        // Stated explicitly. Without this the header is only full width because the
+        // rule inside it happens to stretch a wrap_content parent, which is the same
+        // accident that once made the rail eat the whole screen.
+        wrap.layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         val row = Eink.row(ctx).apply {
             setPadding(0, 0, 0, Eink.dp(ctx, 6f))
         }

@@ -105,6 +105,9 @@ class AgendaFragment : ModuleFragment() {
         val ctx = requireContext()
         val row = Eink.row(ctx).apply {
             setPadding(0, Eink.dp(ctx, 10f), 0, 0)
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
         row.addView(button("\u2190 Prev") { offset -= 1; render() })
         row.addView(View(ctx), LinearLayout.LayoutParams(0, 1, 1f))
@@ -305,7 +308,12 @@ class WeekFragment : ModuleFragment() {
 
     private fun weekNav(): View {
         val ctx = requireContext()
-        val row = Eink.row(ctx).apply { setPadding(0, Eink.dp(ctx, 10f), 0, 0) }
+        val row = Eink.row(ctx).apply {
+            setPadding(0, Eink.dp(ctx, 10f), 0, 0)
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
         row.addView(button("\u2190 Prev") { weekOffset -= 1; render() })
         row.addView(View(ctx), LinearLayout.LayoutParams(0, 1, 1f))
         if (weekOffset != 0L) {

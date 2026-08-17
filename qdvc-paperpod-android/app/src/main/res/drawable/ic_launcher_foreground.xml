@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Adaptive icon foreground: a green leaf.
+
+     Geometry notes, since the numbers are otherwise inscrutable. The leaf lies on
+     a -45 degree axis through the centre of the 108dp canvas, with a half-length
+     of 25 and a half-width of 15 — a width-to-length ratio that reads as a leaf
+     rather than a feather. Nothing strays beyond 32 units from the centre, which
+     keeps it inside the 72dp safe zone the launcher's mask leaves, so the stalk
+     survives a circular crop.
+
+     The blade is one closed shape of two cubic flanks, and the midrib and veins
+     are knocked out in white rather than drawn in a second green. On Kaleido that
+     matters: one saturated mass against white survives the colour filter array,
+     whereas a tint or gradient would come back as grey mush. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Blade: base lower-left, tip upper-right. -->
+    <path
+        android:pathData="M36.3,71.7 C58.4,77.8 77.8,58.4 71.7,36.3 C30.2,49.6 49.6,30.2 36.3,71.7 Z"
+        android:fillColor="@color/leaf" />
+
+    <!-- Midrib, inset from both ends so it never touches the outline. -->
+    <path
+        android:pathData="M39.2,68.8 L68.8,39.2"
+        android:strokeColor="@color/paper"
+        android:strokeWidth="2.6"
+        android:strokeLineCap="round" />
+
+    <!-- Veins, angled forward toward the tip and length-tapered to the local
+         blade width so none of them breaks the edge. -->
+    <path android:pathData="M45.5,62.5 L52.0,64.4" android:strokeColor="@color/paper"
+        android:strokeWidth="1.8" android:strokeLineCap="round" />
+    <path android:pathData="M45.5,62.5 L43.6,56.0" android:strokeColor="@color/paper"
+        android:strokeWidth="1.8" android:strokeLineCap="round" />
+    <path android:pathData="M51.4,56.6 L60.1,59.1" android:strokeColor="@color/paper"
+        android:strokeWidth="1.8" android:strokeLineCap="round" />
+    <path android:pathData="M51.4,56.6 L48.9,47.9" android:strokeColor="@color/paper"
+        android:strokeWidth="1.8" android:strokeLineCap="round" />
+    <path android:pathData="M57.3,50.7 L65.8,53.2" android:strokeColor="@color/paper"
+        android:strokeWidth="1.8" android:strokeLineCap="round" />
+    <path android:pathData="M57.3,50.7 L54.8,42.2" android:strokeColor="@color/paper"
+        android:strokeWidth="1.8" android:strokeLineCap="round" />
+    <path android:pathData="M63.2,44.8 L69.3,46.6" android:strokeColor="@color/paper"
+        android:strokeWidth="1.8" android:strokeLineCap="round" />
+    <path android:pathData="M63.2,44.8 L61.4,38.7" android:strokeColor="@color/paper"
+        android:strokeWidth="1.8" android:strokeLineCap="round" />
+
+    <!-- Stalk, continuing the axis past the base of the blade. -->
+    <path
+        android:pathData="M36.3,71.7 L31.4,76.6"
+        android:strokeColor="@color/leaf"
+        android:strokeWidth="4.5"
+        android:strokeLineCap="round" />
+
+</vector>

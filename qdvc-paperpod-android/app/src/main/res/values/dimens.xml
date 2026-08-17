@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The rail is a fixed width rather than wrap_content. Two reasons: a rail
+         that resizes itself when a label changes makes the reading column jump,
+         and wrap_content on a container of match_parent children is a measurement
+         trap that has already cost one full-width regression. Wide enough for a
+         26dp glyph and a five-character label at 12sp. -->
+    <dimen name="rail_width">64dp</dimen>
+</resources>

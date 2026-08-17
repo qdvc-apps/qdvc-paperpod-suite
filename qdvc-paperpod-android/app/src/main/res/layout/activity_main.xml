@@ -11,7 +11,7 @@
 
     <com.qdvc.paperpod.ui.RailView
         android:id="@+id/rail"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/rail_width"
         android:layout_height="match_parent" />
 
     <FrameLayout

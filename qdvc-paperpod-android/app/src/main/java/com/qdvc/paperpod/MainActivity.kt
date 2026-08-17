@@ -58,6 +58,9 @@ class MainActivity : AppCompatActivity() {
      * Moves the rail to the reachable edge. Only the rail is detached — the
      * fragment container stays put, so switching sides never tears down the
      * module you were looking at.
+     *
+     * The width is taken from the dimension resource rather than left as
+     * WRAP_CONTENT, so this path cannot reintroduce the full-width rail.
      */
     private fun applyRailSide() {
         val onRight = prefs.railOnRight
@@ -65,7 +68,8 @@ class MainActivity : AppCompatActivity() {
         railIsOnRight = onRight
         root.removeView(rail)
         val railParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT
+            resources.getDimensionPixelSize(R.dimen.rail_width),
+            LinearLayout.LayoutParams.MATCH_PARENT
         )
         root.addView(rail, if (onRight) root.childCount else 0, railParams)
         content.layoutParams = LinearLayout.LayoutParams(

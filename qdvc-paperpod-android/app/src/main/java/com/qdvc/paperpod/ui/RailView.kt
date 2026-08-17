@@ -27,15 +27,12 @@ class RailView @JvmOverloads constructor(
     private var onSelect: ((ModuleSpec) -> Unit)? = null
     private var onSettings: (() -> Unit)? = null
     private val itemViews = mutableMapOf<String, View>()
-    private var selectedId: String? = null
-    private val divider: View
 
     init {
         orientation = VERTICAL
         setBackgroundColor(Eink.paper(context))
         setPadding(Eink.dp(context, 4f), Eink.dp(context, 6f), Eink.dp(context, 4f), Eink.dp(context, 6f))
-        minimumWidth = Eink.dp(context, 62f)
-        divider = View(context)
+        // Width comes from R.dimen.rail_width at the layout, not from here.
     }
 
     fun setOnSelect(block: (ModuleSpec) -> Unit) { onSelect = block }
@@ -57,8 +54,14 @@ class RailView @JvmOverloads constructor(
         }
 
         // Push settings to the far end: it is not a module, it is maintenance.
+        //
+        // The width here must be an explicit 0, not MATCH_PARENT or WRAP_CONTENT.
+        // A bare View returns the full spec size from getDefaultSize() for both
+        // AT_MOST and EXACTLY, so either of those makes this spacer measure as wide
+        // as the screen — which drags the rail's width with it and leaves the
+        // content pane nothing. Only a non-negative dimension yields EXACTLY(0).
         addView(View(context).apply {
-            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, 0, 1f)
+            layoutParams = LayoutParams(0, 0, 1f)
         })
 
         val settings = inflater.inflate(R.layout.view_rail_item, this, false)
@@ -72,7 +75,6 @@ class RailView @JvmOverloads constructor(
     }
 
     fun setSelectedModule(id: String?) {
-        selectedId = id
         itemViews.forEach { (moduleId, view) ->
             val active = moduleId == id
             val icon = view.findViewById<ImageView>(R.id.icon)
