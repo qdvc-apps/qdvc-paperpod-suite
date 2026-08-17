@@ -100,10 +100,19 @@ gradle wrapper          # or just open the directory in Android Studio
 No `gradle-wrapper.jar` is committed, so generate the wrapper once or let Android
 Studio do it.
 
-Then: sideload, point your existing SMB sync helper at `/sdcard/QDVC-Paperpod`,
-and grant all-files access from the Sync screen. The payload is a plain mirrored
-directory that scoped storage cannot reach, so the app asks for
-`MANAGE_EXTERNAL_STORAGE` and explains why at the point of asking.
+Then: sideload, point your existing SMB sync helper at a folder on the device, and
+grant all-files access from the Sync screen. Tap "Find payload" and the app scans
+shared storage for a `manifest.json` — no path typing, and a found payload is one
+tap to select. You can also browse to it by hand, or leave it unset and let the
+app check the usual locations (`QDVC-Paperpod`, `Paperpod`,
+`Documents/QDVC-Paperpod`).
+
+The payload is a plain mirrored directory that scoped storage cannot reach, so the
+app asks for `MANAGE_EXTERNAL_STORAGE` and explains why at the point of asking.
+The folder picker is built in rather than using the system document picker: the
+system one returns a `content://` tree URI that would have to be reverse-engineered
+into a filesystem path, and it is an animated, scroll-heavy UI that cannot be
+restyled for this panel.
 
 ## The rail
 

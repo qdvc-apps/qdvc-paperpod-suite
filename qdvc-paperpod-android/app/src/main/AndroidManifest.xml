@@ -35,5 +35,12 @@
             android:label="@string/settings"
             android:parentActivityName=".MainActivity" />
 
+        <!-- Launched from both Settings and the Sync screen, so it declares no
+             single parent. -->
+        <activity
+            android:name=".PayloadPickerActivity"
+            android:exported="false"
+            android:label="@string/payload_folder" />
+
     </application>
 </manifest>

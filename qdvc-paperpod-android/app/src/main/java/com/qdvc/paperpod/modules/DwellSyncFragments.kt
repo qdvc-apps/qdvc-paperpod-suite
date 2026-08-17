@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContracts
+import com.qdvc.paperpod.PayloadPickerActivity
 import com.qdvc.paperpod.data.DwellCard
 import com.qdvc.paperpod.text.FontRegistry
 import com.qdvc.paperpod.ui.Eink
@@ -154,6 +156,24 @@ class SyncFragment : ModuleFragment() {
 
     private lateinit var body: LinearLayout
 
+    /**
+     * Registered as a property so it is in place before the fragment starts, which
+     * is what the Activity Result API requires.
+     */
+    private val pickerLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val path = result.data?.getStringExtra(PayloadPickerActivity.EXTRA_RESULT)
+        if (result.resultCode == android.app.Activity.RESULT_OK && !path.isNullOrBlank()) {
+            prefs.payloadPath = path
+            repo.load()
+            FontRegistry.load(repo.root, force = true)
+            repo.buildInfo?.buildId?.let { prefs.lastSeenBuildId = it }
+            (activity as? com.qdvc.paperpod.MainActivity)?.rebuildFromManifest()
+            render()
+        }
+    }
+
     override fun buildView(): View {
         val (root, b) = page(spec.label)
         body = b
@@ -166,14 +186,21 @@ class SyncFragment : ModuleFragment() {
         body.removeAllViews()
         val col = Eink.column(ctx)
 
-        val reload = button("Reload payload") {
+        val actions = Eink.row(ctx)
+        actions.addView(button("Reload payload") {
             repo.load()
             FontRegistry.load(repo.root, force = true)
             repo.buildInfo?.buildId?.let { prefs.lastSeenBuildId = it }
             (activity as? com.qdvc.paperpod.MainActivity)?.rebuildFromManifest()
             render()
-        }
-        col.addView(reload, LinearLayout.LayoutParams(
+        })
+        actions.addView(View(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(Eink.dp(ctx, 8f), 1)
+        })
+        actions.addView(button(if (repo.root == null) "Find payload\u2026" else "Change folder\u2026") {
+            pickerLauncher.launch(PayloadPickerActivity.intent(ctx, repo.root))
+        })
+        col.addView(actions, LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
         ).apply { topMargin = Eink.dp(ctx, 12f) })
 

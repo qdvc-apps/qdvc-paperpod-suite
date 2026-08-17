@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.qdvc.paperpod.prefs.Prefs
 import com.qdvc.paperpod.text.FontRegistry
@@ -25,12 +26,26 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var prefs: Prefs
     private lateinit var container: LinearLayout
+    private lateinit var pickerLauncher: ActivityResultLauncher<android.content.Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prefs = Prefs(this)
         val repo = PaperpodApp.repository(this)
         FontRegistry.load(repo.root)
+
+        pickerLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            val path = result.data?.getStringExtra(PayloadPickerActivity.EXTRA_RESULT)
+            if (result.resultCode == RESULT_OK && !path.isNullOrBlank()) {
+                prefs.payloadPath = path
+                repo.load()
+                // Fonts live in the payload, so a new folder means a new font list.
+                FontRegistry.load(repo.root, force = true)
+                render()
+            }
+        }
 
         container = Eink.column(this, 16f)
         val scroll = ScrollView(this).apply {
@@ -121,24 +136,31 @@ class SettingsActivity : AppCompatActivity() {
         // ---------------------------------------------------------- payload path
         container.addView(section("Payload location"))
         val repo = PaperpodApp.repository(this)
-        val field = EditText(this).apply {
-            setText(prefs.payloadPath ?: repo.root?.absolutePath ?: "")
-            hint = "/storage/emulated/0/QDVC-Paperpod"
-            setTextColor(Eink.ink(this@SettingsActivity))
-            setHintTextColor(Eink.ink(this@SettingsActivity))
-            textSize = 14f
+        val chosen = prefs.payloadPath
+        val resolved = repo.root
+
+        val status = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
             background = Eink.outline(this@SettingsActivity)
-            val p = Eink.dp(this@SettingsActivity, 10f)
+            val p = Eink.dp(this@SettingsActivity, 12f)
             setPadding(p, p, p, p)
-            isSingleLine = true
+            layoutParams = wide(0f)
         }
-        container.addView(field, wide(6f))
+        status.addView(info(
+            if (chosen.isNullOrBlank()) "Searching" else "Chosen",
+            chosen ?: "usual locations, automatically"
+        ))
+        status.addView(info("Reading", resolved?.absolutePath ?: "nothing found yet"))
+        if (resolved != null) {
+            repo.manifest?.let { m ->
+                status.addView(info("Bundle", m.bundleId.ifBlank { "\u2014" }))
+            }
+        }
+        container.addView(status)
+
         container.addView(rowOf(
-            button("Save and reload") {
-                prefs.payloadPath = field.text.toString().trim().ifBlank { null }
-                repo.load()
-                FontRegistry.load(repo.root, force = true)
-                render()
+            button(if (resolved == null) "Find payload\u2026" else "Change folder\u2026") {
+                pickerLauncher.launch(PayloadPickerActivity.intent(this, resolved))
             },
             button("Clear") {
                 prefs.payloadPath = null
@@ -148,8 +170,8 @@ class SettingsActivity : AppCompatActivity() {
             }
         ))
         container.addView(note(
-            "Leave blank to search the usual locations: " +
-                repo.candidateRoots().drop(1).joinToString(", ") { it.name }
+            "Clearing falls back to searching the usual locations: " +
+                repo.candidateRoots().drop(1).joinToString(", ") { it.name } + "."
         ))
 
         // ---------------------------------------------------------- start module
@@ -276,6 +298,21 @@ class SettingsActivity : AppCompatActivity() {
             layoutParams = wide(8f)
             setLineSpacing(0f, 1.3f)
         }
+
+    private fun info(key: String, value: String): View {
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(0, Eink.dp(this@SettingsActivity, 3f), 0, Eink.dp(this@SettingsActivity, 3f))
+        }
+        row.addView(Eink.body(this, key, sizeSp = 13f, bold = true).apply {
+            width = Eink.dp(this@SettingsActivity, 84f)
+        })
+        row.addView(
+            Eink.body(this, value, sizeSp = 13f),
+            LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+        )
+        return row
+    }
 
     private fun wide(topDp: Float) = LinearLayout.LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT

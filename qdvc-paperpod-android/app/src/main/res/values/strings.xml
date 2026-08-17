@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">Paperpod</string>
     <string name="settings">Settings</string>
+    <string name="payload_folder">Payload folder</string>
 </resources>
