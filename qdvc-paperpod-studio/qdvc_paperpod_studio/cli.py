@@ -1,14 +1,16 @@
 """Command line interface.
 
 The GUI is for curating; the CLI is for the parts that should happen without you.
-A timer that runs `paperpod-studio build --sync` every morning is what makes the
+A timer that runs `paperpod_studio.py build --sync` every morning is what makes the
 tablet worth picking up: the calendar window rolls forward, the day files are
 current, and today's Dwell card is already there.
 
-    paperpod-studio                       open the window
-    paperpod-studio build --sync          rebuild and mirror to the share
-    paperpod-studio add-paper 1706.03762  fetch from arXiv and convert
-    paperpod-studio doctor                report which tools are installed
+    python paperpod_studio.py                       open the window
+    python paperpod_studio.py build --sync          rebuild and mirror to the share
+    python paperpod_studio.py add-paper 1706.03762  fetch from arXiv and convert
+    python paperpod_studio.py doctor                report which tools are installed
+
+Invoked through paperpod_studio.py at the top of the Studio directory.
 """
 
 from __future__ import annotations
@@ -22,7 +24,7 @@ DEFAULT_PROJECT = "~/Paperpod"
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        prog="paperpod-studio",
+        prog="paperpod_studio.py",
         description="Prepare payloads for the QDVC Paperpod tablet app.",
     )
     parser.add_argument(

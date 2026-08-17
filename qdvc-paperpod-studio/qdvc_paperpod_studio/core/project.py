@@ -180,9 +180,11 @@ class Project:
 
     @classmethod
     def load(cls, path: str | Path) -> "Project":
-        path = Path(path).expanduser()
-        if path.is_dir():
-            path = path / "project.json"
+        # Resolve by suffix, not by what happens to exist yet. Testing is_dir()
+        # here means the very first run — where the project directory has not been
+        # created — mistakes the directory for the JSON file and scatters library/,
+        # fonts/ and out/ into its parent.
+        path = _project_file(path)
         if not path.exists():
             project = cls()
             project._path = path
@@ -249,11 +251,9 @@ class Project:
         }
 
     def save(self, path: str | Path | None = None) -> Path:
-        target = Path(path).expanduser() if path else self._path
+        target = _project_file(path) if path else self._path
         if target is None:
             raise RuntimeError("No path to save to.")
-        if target.is_dir():
-            target = target / "project.json"
         target.parent.mkdir(parents=True, exist_ok=True)
         # Write via a temporary file so an interrupted save cannot leave a
         # half-written project behind.
@@ -262,6 +262,14 @@ class Project:
         tmp.replace(target)
         self._path = target
         return target
+
+
+def _project_file(path: str | Path) -> Path:
+    """Accepts either a project directory or the project.json inside it."""
+    resolved = Path(path).expanduser()
+    if resolved.suffix.lower() == ".json":
+        return resolved
+    return resolved / "project.json"
 
 
 def _pick(raw: dict[str, Any], cls: type) -> dict[str, Any]:

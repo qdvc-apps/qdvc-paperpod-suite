@@ -1,0 +1,41 @@
+# QDVC Paperpod Studio dependencies. Python 3.11 or newer.
+#
+#   python3 -m venv .venv --system-site-packages
+#   . .venv/bin/activate
+#   pip install -r requirements.txt
+#
+# --system-site-packages is worth using: it lets the venv see PyGObject from your
+# distribution's packages, which is far less painful than building it from PyPI.
+
+# ICS parsing and recurrence expansion. Expanding RRULEs here rather than on the
+# tablet is the central design decision of the whole suite, so these are required.
+icalendar>=6.0
+python-dateutil>=2.9
+
+# Rasterises equations and tables to PNG so the device needs no maths renderer.
+matplotlib>=3.8
+
+# GTK4 bindings for the desktop window.
+#
+# Prefer your distribution's packages and a venv created with
+# --system-site-packages:
+#
+#   Debian/Ubuntu:  sudo apt install python3-gi gir1.2-gtk-4.0
+#   Fedora:         sudo dnf install python3-gobject gtk4
+#   Arch:           sudo pacman -S python-gobject gtk4
+#
+# Installing from PyPI instead needs gobject-introspection and cairo development
+# headers present first, so it is commented out rather than assumed. The CLI
+# (build, sync, add-paper, doctor) runs without it; only the window needs it.
+#
+# PyGObject>=3.46
+
+# External command-line tools Studio shells out to. Not pip-installable, and all
+# optional — each conversion that needs one fails with a message naming it:
+#
+#   pandoc          LaTeX and JATS conversion (the good paths)
+#   poppler-utils   pdftotext for the PDF fallback, pdftoppm for vector figures
+#   ghostscript     EPS figures in older LaTeX sources
+#   rsync           mirroring the payload to the mounted SMB share
+#
+# Debian/Ubuntu: sudo apt install pandoc poppler-utils ghostscript rsync

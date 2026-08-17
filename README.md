@@ -57,14 +57,17 @@ permanently visible icon rail. No drawer, no gestures, no file browsing.
 
 ### Studio (desktop)
 
-Needs Python 3.11+, GTK4, and PyGObject from your distribution's packages:
+Needs Python 3.11+, GTK4 and PyGObject. There is nothing to install — it runs as
+a script:
 
 ```bash
 sudo apt install python3-gi gir1.2-gtk-4.0 pandoc poppler-utils rsync
 cd qdvc-paperpod-studio
-pip install -e .
-paperpod-studio doctor          # report which optional tools are present
-paperpod-studio                 # open the window
+python3 -m venv .venv --system-site-packages   # so the venv can see PyGObject
+. .venv/bin/activate
+pip install -r requirements.txt
+python paperpod_studio.py doctor               # which optional tools are present
+python paperpod_studio.py                      # open the window
 ```
 
 `pandoc` does the LaTeX and JATS conversion, `poppler-utils` provides the PDF
@@ -79,9 +82,12 @@ The CLI is what makes automation possible — a systemd timer running this each
 morning is what keeps the tablet worth picking up:
 
 ```bash
-paperpod-studio build --sync
-paperpod-studio add-paper 1706.03762 --tags transformers
+python paperpod_studio.py build --sync
+python paperpod_studio.py add-paper 1706.03762 --tags transformers
 ```
+
+Only the window needs PyGObject; `build`, `sync`, `add-paper` and `doctor` run
+without it, which matters if the timer runs somewhere headless.
 
 ### Paperpod (tablet)
 
